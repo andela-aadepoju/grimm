@@ -1,6 +1,7 @@
 require "grimm/version"
 require "grimm/controller.rb"
 require "grimm/utilities.rb"
+require "grimm/dependencies.rb"
 
 module Grimm
   class Application

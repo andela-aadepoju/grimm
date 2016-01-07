@@ -6,7 +6,6 @@ class String
     tr("-", "_").downcase
   end
 
-
   def CamelCase
     return self if self !~ /_/ && self =~ /[A-Z]+.*/
     split("_").map { |str|str.capitalize }.join
