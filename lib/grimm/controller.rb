@@ -4,8 +4,8 @@ module Grimm
   class Controller
     attr_reader :request
 
-    def initialize(env)
-      @request ||= Rack::Request.new(env)
+    def initialize
+      @request ||= Rack::Response.new
     end
 
     def params
@@ -38,6 +38,20 @@ module Grimm
 
     def controller_name
       self.class.to_s.gsub(/Controller$/, "").snake_case
+    end
+
+    def dispatch(action)
+      content = self.send(action)
+      if get_response
+        get_response
+      else
+        render(action)
+        get_response
+      end
+    end
+
+    def self.action(action_name)
+      new.dispatch(action_name)
     end
   end
 end

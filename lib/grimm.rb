@@ -2,34 +2,29 @@ require "grimm/version"
 require "grimm/controller.rb"
 require "grimm/utilities.rb"
 require "grimm/dependencies.rb"
+require "grimm/routing.rb"
+require "pry"
 
 module Grimm
   class Application
+    attr_reader :request
     def call(env)
-      if env["PATH_INFO"]== "/"
-        return [302, {"Location" => "/pages/index"}, []]
+      @request = Rack::Request.new(env)
+      if request.path_info == "/favicon.ico"
+        return [500,{}, []]
       end
-      if env["PATH_INFO"]== "/favicon.ico"
-        return [400, {}, []]
-      end
-
-      controller_class, action = get_controller_and_action(env)
-      controller = controller_class.new(env)
-      response = controller.send(action)
-
-      if controller.get_response
-        controller.get_response
-      else
-        controller.render(action)
-        controller.get_response
-        #[200, { "Content-Type" => "text/html" }, [controller]]
-      end
+      return [404, {}, ["This route is not defined"]] unless get_rack_app(env)
     end
 
-    def get_controller_and_action(env)
-      _, controller_name, action = env["PATH_INFO"].split("/")
-      controller_name = controller_name.CamelCase + "Controller"
-      [Object.const_get(controller_name), action]
+    def route(&block)
+      @router ||= Grimm::Router.new
+      @router.instance_eval(&block)
+    end
+
+    def get_rack_app(env)
+      path = request.path_info
+      method = request.request_method.downcase.to_sym
+      @router.confirm_route(method, path)
     end
   end
 end
