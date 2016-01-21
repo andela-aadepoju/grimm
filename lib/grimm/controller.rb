@@ -2,10 +2,10 @@ require "tilt/erb"
 
 module Grimm
   class Controller
-    attr_reader :request
+    attr_reader :request, :response
 
-    def initialize
-      @request ||= Rack::Response.new
+    def initialize(env)
+      @request ||= Rack::Request.new(env)
     end
 
     def params
@@ -33,7 +33,7 @@ module Grimm
     end
 
     def get_response
-      @response
+      response
     end
 
     def controller_name
@@ -41,7 +41,7 @@ module Grimm
     end
 
     def dispatch(action)
-      content = self.send(action)
+      self.send(action)
       if get_response
         get_response
       else
@@ -51,7 +51,7 @@ module Grimm
     end
 
     def self.action(action_name)
-      new.dispatch(action_name)
+      -> (env) { self.new(env).dispatch(action_name) }
     end
   end
 end
