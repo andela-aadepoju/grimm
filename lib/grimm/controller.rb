@@ -1,11 +1,11 @@
 require "tilt/erb"
 
 module Grimm
-  class Controller
+  class BaseController
     attr_reader :request, :response
 
-    def initialize(env)
-      @request ||= Rack::Request.new(env)
+    def initialize(request)
+      @request = request
     end
 
     def params
@@ -21,23 +21,36 @@ module Grimm
     end
 
     def render_template(view_name, locals = {})
-      filename = File.join("app", "views", controller_name, "#{view_name}.html.erb")
-      template = File.read(filename)
+      template = Tilt::ERBTemplate.new(File.join( "app", "views",
+                                       "layouts", "application.html.erb"))
+      title = view_name.to_s.tr("_", " ").capitalize
+      view = "#{view_name}.html.erb"
+      view_template = Tilt::ERBTemplate.new(File.join( "app", "views",
+                                                      controller_name, view))
+      template.render(self, title: title) do
+        view_template.render(self, locals.merge!(get_vars))
+      end
+    end
 
+    def get_vars
       vars = {}
       instance_variables.each do |var|
         key = var.to_s.gsub("@","").to_sym
         vars[key] = instance_variable_get(var)
       end
-      Tilt::ERBTemplate.new(filename).render(self, locals.merge(vars))
+      vars
     end
 
     def get_response
-      response
+      @response
     end
 
     def controller_name
       self.class.to_s.gsub(/Controller$/, "").snake_case
+    end
+
+    def redirect_to(url)
+        @response = Rack::Response.new(body = {}, status = 302, header = {"location" => url})
     end
 
     def dispatch(action)
@@ -50,8 +63,8 @@ module Grimm
       end
     end
 
-    def self.action(action_name)
-      -> (env) { self.new(env).dispatch(action_name) }
+    def self.action(request, action_name)
+       self.new(request).dispatch(action_name)
     end
   end
 end

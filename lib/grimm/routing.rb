@@ -29,30 +29,6 @@ module Grimm
 
     match_verbs :get, :post, :put, :patch, :delete
 
-    def check_url(request)
-      url = request.path_info
-      verb = request.request_method.downcase.to_sym
-      route_match = routes[verb].detect do |route|
-        (route.first).match(url)
-      end
-      if route_match
-        placeholder = {}
-        match = route_match.first.match(url)
-        held_value = route_match[2]
-        held_value.each_with_index do |value, index|
-          placeholder[value] = match.captures[index]
-        end
-        route_match << placeholder
-        return convert_target(route_match[1])
-      end
-    end
-
-    def convert_target(route)
-      controller_name = route[:controller].CamelCase
-      controller = Object.const_get("#{controller_name}Controller")
-      return controller.action(route[:target])
-    end
-
     def draw(&block)
      instance_eval(&block)
     end
@@ -69,15 +45,40 @@ module Grimm
       get("/#{args}/edit/:id", to: "#{args}#edit")
       get("/#{args}/delete/:id", to: "#{args}#destroy")
       post("/#{args}/", to: "#{args}#create")
-      patch("/#{args}/:id", to: "#{args}#update")
+      post("/#{args}/:id", to: "#{args}#update")
       put("/#{args}/:id", to: "#{args}#update")
+    end
+
+    def check_url(request)
+      url = request.path_info
+      verb = request.request_method.downcase.to_sym
+      route_match = routes[verb].detect do |route|
+        (route.first).match(url)
+      end
+      if route_match
+        placeholder = {}
+        match = route_match.first.match(url)
+        held_value = route_match[2]
+        held_value.each_with_index do |value, index|
+          placeholder[value] = match.captures[index]
+        end
+        request.params.merge!(placeholder)
+        route_match << placeholder
+        return convert_target(request, route_match[1])
+      end
+    end
+
+    def convert_target(request, route)
+      controller_name = route[:controller].camelcase
+      controller = Object.const_missing("#{controller_name}Controller")
+      return controller.action(request, route[:target])
     end
 
     private
 
     def parse_to(option)
       controller, target = option.split("#")
-      { controller: controller.CamelCase, target: target }
+      { controller: controller.camelcase, target: target }
     end
   end
 end
