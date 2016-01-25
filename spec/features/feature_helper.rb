@@ -2,8 +2,7 @@ require "spec_helper"
 require "capybara/rspec"
 $LOAD_PATH << File.join(File.dirname(__FILE__), "grimm_app")
 require "test_helper"
-require 'coveralls'
-Coveralls.wear!
+
 
 RSpec.configure do |config|
   config.before(:each) do
