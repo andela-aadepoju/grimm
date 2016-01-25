@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 ">
+      <h3><%= @lists.title %></h3>
+
+      <hr>
+      <p class = "text-justify"><%= @lists.body %></p>
+      <br>
+      <p>
+      <div class="pull-left">
+        <h6> Created on <%= DateTime.parse(@lists.created_at).strftime("%A, %B %d, %Y at %I:%M%p") %></h6>
+      </div>
+      <div class="pull-right">
+      <a href="/" class="btn btn-primary btn-sm">Back</a>
+      </div>
+      <br>
+    </p>
+  </div>
+
+</div>

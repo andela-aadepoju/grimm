@@ -54,10 +54,6 @@ module Grimm
       end
     end
 
-    def save_records(obj_id)
-
-    end
-
     def self.find(id)
       row = DatabaseConnector.execute("SELECT #{@@properties.keys.join(',')}
       FROM #{@@table} WHERE id = ?", id).first
@@ -94,10 +90,6 @@ module Grimm
       (["?"] * (@@properties.size - 1)).join(",")
     end
 
-    def method_missing(method, *args)
-      @model.send(method)
-    end
-
     def self.map_object(row)
       model_name = self.new
       @@properties.each_key.with_index do |value, index|
@@ -114,8 +106,16 @@ module Grimm
       end
     end
 
+    def drop_table
+      DatabaseConnector.execute "DROP #{@@table}"
+    end
+
     def self.delete(id)
       DatabaseConnector.execute "DELETE FROM #{@@table} WHERE id = ?", id
+    end
+
+    def self.delete_all
+      DatabaseConnector.execute "DELETE FROM #{@@table}"
     end
   end
 end

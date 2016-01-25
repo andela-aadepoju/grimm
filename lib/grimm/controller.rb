@@ -21,11 +21,11 @@ module Grimm
     end
 
     def render_template(view_name, locals = {})
-      template = Tilt::ERBTemplate.new(File.join( "app", "views",
+      template = Tilt::ERBTemplate.new(File.join($:.first, "app", "views",
                                        "layouts", "application.html.erb"))
       title = view_name.to_s.tr("_", " ").capitalize
       view = "#{view_name}.html.erb"
-      view_template = Tilt::ERBTemplate.new(File.join( "app", "views",
+      view_template = Tilt::ERBTemplate.new(File.join($:.first, "app", "views",
                                                       controller_name, view))
       template.render(self, title: title) do
         view_template.render(self, locals.merge!(get_vars))
