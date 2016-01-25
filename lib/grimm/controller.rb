@@ -22,7 +22,7 @@ module Grimm
 
     def render_template(view_name, locals = {})
       template = Tilt::ERBTemplate.new(File.join($:.first, "app", "views",
-                                       "layouts", "application.html.erb"))
+                                                 "layouts", "application.html.erb"))
       title = view_name.to_s.tr("_", " ").capitalize
       view = "#{view_name}.html.erb"
       view_template = Tilt::ERBTemplate.new(File.join($:.first, "app", "views",
@@ -35,7 +35,7 @@ module Grimm
     def get_vars
       vars = {}
       instance_variables.each do |var|
-        key = var.to_s.gsub("@","").to_sym
+        key = var.to_s.delete("@").to_sym
         vars[key] = instance_variable_get(var)
       end
       vars
@@ -50,11 +50,11 @@ module Grimm
     end
 
     def redirect_to(url)
-        @response = Rack::Response.new(body = {}, status = 302, header = {"location" => url})
+      @response = Rack::Response.new(body = {}, status = 302, header = { "location" => url })
     end
 
     def dispatch(action)
-      self.send(action)
+      send(action)
       if get_response
         get_response
       else
@@ -64,7 +64,7 @@ module Grimm
     end
 
     def self.action(request, action_name)
-       self.new(request).dispatch(action_name)
+      new(request).dispatch(action_name)
     end
   end
 end
