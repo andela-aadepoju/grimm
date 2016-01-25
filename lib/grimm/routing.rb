@@ -1,9 +1,8 @@
 module Grimm
-
   class Router
     attr_reader :routes
     def initialize
-      @routes = Hash.new { |hash, key| hash[key] =  []}
+      @routes = Hash.new { |hash, key| hash[key] = [] }
     end
 
     def self.match_verbs(*verbs)
@@ -30,7 +29,7 @@ module Grimm
     match_verbs :get, :post, :put, :patch, :delete
 
     def draw(&block)
-     instance_eval(&block)
+      instance_eval(&block)
     end
 
     def root(address)
@@ -53,7 +52,7 @@ module Grimm
       url = request.path_info
       verb = request.request_method.downcase.to_sym
       route_match = routes[verb].detect do |route|
-        (route.first).match(url)
+        route.first.match(url)
       end
       if route_match
         placeholder = {}
@@ -71,7 +70,7 @@ module Grimm
     def convert_target(request, route)
       controller_name = route[:controller].camelcase
       controller = Object.const_missing("#{controller_name}Controller")
-      return controller.action(request, route[:target])
+      controller.action(request, route[:target])
     end
 
     private

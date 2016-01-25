@@ -1,7 +1,6 @@
-require_relative 'feature_helper'
+require_relative "feature_helper"
 
 describe "create todo lists", type: :feature do
-
   it "visits homepage" do
     visit "/"
     expect(page).to have_content "Todo List"

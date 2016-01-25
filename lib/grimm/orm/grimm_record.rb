@@ -17,19 +17,19 @@ module Grimm
       prop_array = []
       @@properties.each do |key, value|
         properties = []
-        properties << "#{key}"
+        properties << key.to_s
         value.each do |name, type|
           get_table_query(properties, name, type)
         end
         prop_array << properties.join(" ")
       end
-      query = "CREATE TABLE IF NOT EXISTS #{@@table} (#{prop_array.join(", ")})"
+      query = "CREATE TABLE IF NOT EXISTS #{@@table} (#{prop_array.join(', ')})"
       DatabaseConnector.execute(query)
       make_methods
     end
 
     def self.make_methods
-      mtds = @@properties.keys.map { |mtd| mtd.to_sym }
+      mtds = @@properties.keys.map(&:to_sym)
       instance_exec(mtds) do
         mtds.each { |mtd| attr_accessor mtd }
       end
@@ -49,7 +49,7 @@ module Grimm
     end
 
     def save
-      if self.id
+      if id
         DatabaseConnector.execute "UPDATE #{@@table} SET
         #{update_records_placeholders} WHERE id = ?", update_records
       else
@@ -61,13 +61,13 @@ module Grimm
     def self.find(id)
       row = DatabaseConnector.execute("SELECT #{@@properties.keys.join(',')}
       FROM #{@@table} WHERE id = ?", id).first
-      self.map_object(row)
+      map_object(row)
     end
 
     def get_values
       attributes = @@properties.keys
       attributes.delete(:id)
-      attributes.map { |method| self.send(method) }
+      attributes.map { |method| send(method) }
     end
 
     def update_records_placeholders
@@ -83,7 +83,7 @@ module Grimm
     end
 
     def update_records
-      get_values << self.send(:id)
+      get_values << send(:id)
     end
 
     def new_record_value
@@ -95,18 +95,18 @@ module Grimm
     end
 
     def self.map_object(row)
-      model_name = self.new
+      model_name = new
       @@properties.each_key.with_index do |value, index|
         model_name.send("#{value}=", row[index])
       end
-        model_name
+      model_name
     end
 
     def self.findAll
       data = DatabaseConnector.execute "SELECT #{@@properties.keys.join(',')}
       FROM #{@@table}"
       data.map do |row|
-        self.map_object(row)
+        map_object(row)
       end
     end
 

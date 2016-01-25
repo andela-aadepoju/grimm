@@ -7,14 +7,13 @@ require "pry"
 require "grimm/orm/database_connector.rb"
 require "grimm/orm/grimm_record.rb"
 
-
 module Grimm
   class Application
     attr_reader :request
     def call(env)
       @request = Rack::Request.new(env)
       if request.path_info == "/favicon.ico"
-        return [404,{}, []]
+        return [404, {}, []]
       end
       page = get_rack_app(env)
       if page.nil?
@@ -24,11 +23,11 @@ module Grimm
       end
     end
 
-    def route(&block)
+    def route(&_block)
       @router ||= Grimm::Router.new
     end
 
-    def get_rack_app(env)
+    def get_rack_app(_env)
       @router.check_url(request)
     end
   end
