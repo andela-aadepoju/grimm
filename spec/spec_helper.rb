@@ -3,5 +3,5 @@ $LOAD_PATH << File.join(File.dirname(__FILE__), "../features/feature_helper")
 
 require "simplecov"
 SimpleCov.start
-require 'coveralls'
+require "coveralls"
 Coveralls.wear!
