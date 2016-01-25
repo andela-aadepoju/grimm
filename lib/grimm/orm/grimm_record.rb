@@ -102,7 +102,7 @@ module Grimm
       model_name
     end
 
-    def self.findAll
+    def self.all
       data = DatabaseConnector.execute "SELECT #{@@properties.keys.join(',')}
       FROM #{@@table}"
       data.map do |row|

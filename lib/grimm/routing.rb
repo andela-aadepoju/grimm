@@ -12,18 +12,26 @@ module Grimm
           url_parts.select! { |part| !part.empty? }
           placeholder = []
           regexp_parts = url_parts.map do |part|
-            if part[0] == ":"
-              placeholder << part[1..-1]
-              "([A-Za-z0-9_]+)"
-            else
-              part
-            end
+            check_part(placeholder, part)
           end
-          regexp = regexp_parts.join("/")
-          routes[verb] << [Regexp.new("^/#{regexp}$"),
-                           parse_to(options[:to]), placeholder]
+          save_routes(regexp_parts, verb, placeholder, options)
         end
       end
+    end
+
+    def check_part(placeholder, part)
+      if part[0] == ":"
+        placeholder << part[1..-1]
+        "([A-Za-z0-9_]+)"
+      else
+        part
+      end
+    end
+
+    def save_routes(regexp_parts, verb, placeholder, options)
+      regexp = regexp_parts.join("/")
+      routes[verb] << [Regexp.new("^/#{regexp}$"),
+                       parse_to(options[:to]), placeholder]
     end
 
     match_verbs :get, :post, :put, :patch, :delete
@@ -54,6 +62,10 @@ module Grimm
       route_match = routes[verb].detect do |route|
         route.first.match(url)
       end
+      find_match(route_match, url, request)
+    end
+
+    def find_match(route_match, url, request)
       if route_match
         placeholder = {}
         match = route_match.first.match(url)
