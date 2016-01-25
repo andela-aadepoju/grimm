@@ -5,7 +5,7 @@ require "test_helper"
 
 RSpec.configure do |config|
   config.before(:each) do
-    Capybara.app = GrimmApplication
+    Capybara.app = APP
     List.delete_all
     @list = List.new
     @list.title = "Fists Todo"

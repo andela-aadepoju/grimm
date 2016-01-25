@@ -1,12 +1,11 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <div class="col-md-6 col-md-offset-3" >
         <h3><%= lists.title %></h3>
         <hr>
         <p><%= lists.body %></p>
-
         <form action="/lists/<%= lists.id %>"  method="post">
+          <input type="hidden" class="form-control" name="_method" value ="put" />
           <div class="form-group">
             <input type="hidden" class="form-control" name="id" value ="<%= lists.id %>" />
           </div>

@@ -1,14 +1,18 @@
-GEM
-  remote: https://rubygems.org/
+PATH
+  remote: ../grimm
   specs:
-    coderay (1.1.0)
-    ffi (1.9.10)
     grimm (0.0.3)
       pry
       puma
       rack
       sqlite3
       tilt
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    coderay (1.1.0)
+    ffi (1.9.10)
     method_source (0.8.2)
     pry (0.10.3)
       coderay (~> 1.1.0)
@@ -25,7 +29,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  grimm (~> 0.0.3)
+  grimm!
   sqlite3
 
 BUNDLED WITH

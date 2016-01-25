@@ -1,11 +1,6 @@
 require_relative "feature_helper"
 
 describe "create todo lists", type: :feature do
-  it "visits homepage" do
-    visit "/"
-    expect(page).to have_content "Todo List"
-  end
-
   it "visits create new page" do
     visit "/"
     click_on "Create New"
@@ -29,7 +24,7 @@ describe "create todo lists", type: :feature do
     fill_in "title", with: "Test Todo"
     fill_in "body", with: "Test Todo Body"
     click_on "Create"
-    click_on "Mark As Done", match: :first
+    click_on "Mannage", match: :first
     check "done"
     click_on "Update"
     expect(page).to have_content "Done"

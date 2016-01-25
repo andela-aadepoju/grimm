@@ -3,31 +3,37 @@
     <div class="col-md-12 ">
       <a href="/lists/new" class="btn btn-primary btn-sm pull-right">Create New</a>
       <h3> Todo List</h3>
-      <hr>
-
       <% @lists.each do |list| %>
-      <h4><a href="/lists/<%= list.id %>"><%= list.title %></a></h4>
-      <p class = "text-justify"><%= list.body %></p>
-      <br>
-      <div class="pull-left">
-        <h6> Created on <%= DateTime.parse(list.created_at).strftime("%A, %B %d, %Y at %I:%M%p") %></h6>
-      </div>
-      <div class="pull-right">
-        <% if list.done == "true" %>
-            <button class="btn btn-sm btn-success disabled">
-             <span class="badge">Done</span>
-            </button>
-           <% else %>
-           <button class="btn btn-sm btn-danger disabled">
-            <span class="badge">Undone</span>
-           </button>
-           <a href="/lists/edit/<%= list.id %>" class="btn btn-info btn-sm" role="button">Mark As Done</a>
-
-          <% end %>
-      <a href="/lists/delete/<%= list.id %>" class="btn btn-danger btn-sm " role="alert">Delete</a>
-      </div>
-      <br>
-      <hr>
+        <div class="col-md-12">
+          <hr>
+            <h4><a href="/lists/<%= list.id %>"><%= list.title %></a></h4>
+            <p class = "text-justify"><%= list.body %></p>
+            <div>
+              <div class="pull-left">
+                <h6 class="pull-left"> Created on <%= DateTime.parse(list.created_at).strftime("%A, %B %d, %Y at %I:%M%p") %></h6>
+                <br>
+                <% if list.done == "true" %>
+                  <a class="disabled text-danger pull-left">
+                    <span class="badge">Done</span>
+                  </a>
+                <% else %>
+                  <a class="disabled text-danger pull-left">
+                    <span class="badge">Undone</span>
+                  </a>
+                <% end %>
+            </div>
+            <div class="pull-right">
+              <a href="/lists/edit/<%= list.id %>" class="btn btn-info pull-left btn-sm" role="button">Mannage</a>
+              &nbsp;
+              <form action="/lists/<%= list.id %>"  method="post" class="pull-right">
+                <input type="hidden" class="form-control" name="_method" value ="delete">
+                <button type= "submit" class="btn btn-smbtn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
       <% end %>
+    </div>
   </div>
+  <hr>
 </div>
