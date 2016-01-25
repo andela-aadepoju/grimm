@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Grimm::Application do
   let(:app) { Grimm::Application.new }

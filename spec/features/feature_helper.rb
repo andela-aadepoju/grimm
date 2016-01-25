@@ -3,7 +3,6 @@ require "capybara/rspec"
 $LOAD_PATH << File.join(File.dirname(__FILE__), "grimm_app")
 require "test_helper"
 
-
 RSpec.configure do |config|
   config.before(:each) do
     Capybara.app = GrimmApplication

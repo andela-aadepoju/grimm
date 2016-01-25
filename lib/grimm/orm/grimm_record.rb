@@ -19,16 +19,7 @@ module Grimm
         properties = []
         properties << "#{key}"
         value.each do |name, type|
-          name = name.to_s.downcase
-          if name == "primary_key" && type
-            properties << "PRIMARY KEY AUTOINCREMENT"
-          elsif name == "autoincrement" && type
-            properties << "AUTOINCREMENT"
-          elsif name == "nullable" && !type
-            properties << "NOT NULL"
-          elsif name == "type"
-            properties << type.to_s
-          end
+          get_table_query(properties, name, type)
         end
         prop_array << properties.join(" ")
       end
@@ -41,6 +32,19 @@ module Grimm
       mtds = @@properties.keys.map { |mtd| mtd.to_sym }
       instance_exec(mtds) do
         mtds.each { |mtd| attr_accessor mtd }
+      end
+    end
+
+    def self.get_table_query(properties, name, type)
+      name = name.to_s.downcase
+      if name == "primary_key" && type
+        properties << "PRIMARY KEY AUTOINCREMENT"
+      elsif name == "autoincrement" && type
+        properties << "AUTOINCREMENT"
+      elsif name == "nullable" && !type
+        properties << "NOT NULL"
+      elsif name == "type"
+        properties << type.to_s
       end
     end
 
@@ -104,10 +108,6 @@ module Grimm
       data.map do |row|
         self.map_object(row)
       end
-    end
-
-    def drop_table
-      DatabaseConnector.execute "DROP #{@@table}"
     end
 
     def self.delete(id)
