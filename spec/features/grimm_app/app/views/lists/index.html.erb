@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 ">
+      <a href="/lists/new" class="btn btn-primary btn-sm pull-right">Create New</a>
+      <h3> Todo List</h3>
+      <hr>
+
+      <% @lists.each do |list| %>
+      <h4><a href="/lists/<%= list.id %>"><%= list.title %></a></h4>
+      <p class = "text-justify"><%= list.body %></p>
+      <br>
+      <div class="pull-left">
+        <h6> Created on <%= DateTime.parse(list.created_at).strftime("%A, %B %d, %Y at %I:%M%p") %></h6>
+      </div>
+      <div class="pull-right">
+        <% if list.done == "true" %>
+            <button class="btn btn-sm btn-success disabled">
+             <span class="badge">Done</span>
+            </button>
+           <% else %>
+           <button class="btn btn-sm btn-danger disabled">
+            <span class="badge">Undone</span>
+           </button>
+           <a href="/lists/edit/<%= list.id %>" class="btn btn-info btn-sm" role="button">Mark As Done</a>
+
+          <% end %>
+      <a href="/lists/delete/<%= list.id %>" class="btn btn-danger btn-sm " role="alert">Delete</a>
+      </div>
+      <br>
+      <hr>
+      <% end %>
+  </div>
+</div>

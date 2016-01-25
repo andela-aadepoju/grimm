@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Grimm do
   it "Makes string Camel Case" do
-    expect("camel_case".camelcase).to eql "camelcase"
+    expect("camel_case".camelcase).to eql "CamelCase"
   end
 
   it "Makes string Snake Case" do

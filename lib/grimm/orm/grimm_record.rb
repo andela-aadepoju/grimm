@@ -19,16 +19,7 @@ module Grimm
         properties = []
         properties << "#{key}"
         value.each do |name, type|
-          name = name.to_s.downcase
-          if name == "primary_key" && type
-            properties << "PRIMARY KEY AUTOINCREMENT"
-          elsif name == "autoincrement" && type
-            properties << "AUTOINCREMENT"
-          elsif name == "nullable" && !type
-            properties << "NOT NULL"
-          elsif name == "type"
-            properties << type.to_s
-          end
+          get_table_query(properties, name, type)
         end
         prop_array << properties.join(" ")
       end
@@ -44,6 +35,19 @@ module Grimm
       end
     end
 
+    def self.get_table_query(properties, name, type)
+      name = name.to_s.downcase
+      if name == "primary_key" && type
+        properties << "PRIMARY KEY AUTOINCREMENT"
+      elsif name == "autoincrement" && type
+        properties << "AUTOINCREMENT"
+      elsif name == "nullable" && !type
+        properties << "NOT NULL"
+      elsif name == "type"
+        properties << type.to_s
+      end
+    end
+
     def save
       if self.id
         DatabaseConnector.execute "UPDATE #{@@table} SET
@@ -52,10 +56,6 @@ module Grimm
         DatabaseConnector.execute "INSERT INTO #{@@table} (#{get_columns})
         VALUES  (#{new_record_placeholders})", new_record_value
       end
-    end
-
-    def save_records(obj_id)
-
     end
 
     def self.find(id)
@@ -94,10 +94,6 @@ module Grimm
       (["?"] * (@@properties.size - 1)).join(",")
     end
 
-    def method_missing(method, *args)
-      @model.send(method)
-    end
-
     def self.map_object(row)
       model_name = self.new
       @@properties.each_key.with_index do |value, index|
@@ -116,6 +112,10 @@ module Grimm
 
     def self.delete(id)
       DatabaseConnector.execute "DELETE FROM #{@@table} WHERE id = ?", id
+    end
+
+    def self.delete_all
+      DatabaseConnector.execute "DELETE FROM #{@@table}"
     end
   end
 end

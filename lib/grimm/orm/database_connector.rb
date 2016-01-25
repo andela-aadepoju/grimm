@@ -2,7 +2,7 @@ module Grimm
   class DatabaseConnector
 
     def self.connect_db
-      @@db = SQLite3::Database.new File.join "db", "grimm.db"
+      @@db = SQLite3::Database.new File.join "grimm.db"
     end
 
     def self.execute(query, args =  nil)
