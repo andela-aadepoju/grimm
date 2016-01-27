@@ -21,3 +21,4 @@
 /vendor/*
 /index.html
 /grimm.db
+/coverage/*
