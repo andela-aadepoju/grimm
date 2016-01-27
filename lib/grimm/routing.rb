@@ -50,9 +50,8 @@ module Grimm
       get("/#{args}/new", to: "#{args}#new")
       get("/#{args}/:id", to: "#{args}#show")
       get("/#{args}/edit/:id", to: "#{args}#edit")
-      get("/#{args}/delete/:id", to: "#{args}#destroy")
+      delete("/#{args}/:id", to: "#{args}#destroy")
       post("/#{args}/", to: "#{args}#create")
-      post("/#{args}/:id", to: "#{args}#update")
       put("/#{args}/:id", to: "#{args}#update")
     end
 

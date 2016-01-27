@@ -4,7 +4,6 @@ require "grimm/utilities.rb"
 require "grimm/dependencies.rb"
 require "grimm/routing.rb"
 require "pry"
-require "grimm/orm/database_connector.rb"
 require "grimm/orm/grimm_record.rb"
 
 module Grimm
@@ -25,7 +24,7 @@ module Grimm
       end
     end
 
-    def route(&_block)
+    def route
       @router ||= Grimm::Router.new
     end
 
