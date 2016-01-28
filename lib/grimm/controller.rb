@@ -56,12 +56,8 @@ module Grimm
 
     def dispatch(action)
       send(action)
-      if get_response
-        get_response
-      else
-        render(action)
-        get_response
-      end
+      render(action) unless get_response
+      get_response
     end
 
     def self.action(request, action_name)
