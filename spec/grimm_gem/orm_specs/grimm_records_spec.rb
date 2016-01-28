@@ -23,7 +23,8 @@ describe "grimm record" do
     end
 
     it "returns value of primary key" do
-      expect(List.get_table_query([], "primary_key", true)).to eq ["PRIMARY KEY AUTOINCREMENT"]
+      auto = ["PRIMARY KEY AUTOINCREMENT"]
+      expect(List.get_table_query([], "primary_key", true)).to eq auto
     end
 
     it "returns value of nullable" do
