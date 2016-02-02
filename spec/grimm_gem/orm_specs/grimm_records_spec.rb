@@ -1,8 +1,8 @@
 require "spec_helper"
 describe "grimm record" do
   describe "#create_table_query" do
-    auto = ["AUTOINCREMENT"]
     it "returns creat query hash as string" do
+      auto = ["AUTOINCREMENT"]
       expect(List.get_table_query([], "autoincrement", "ture")).to eq auto
     end
 
@@ -23,8 +23,8 @@ describe "grimm record" do
     end
 
     it "returns value of primary key" do
-      auto = ["PRIMARY KEY AUTOINCREMENT"]
-      expect(List.get_table_query([], "primary_key", true)).to eq auto
+      primary = ["PRIMARY KEY AUTOINCREMENT"]
+      expect(List.get_table_query([], "primary_key", true)).to eq primary
     end
 
     it "returns value of nullable" do
@@ -33,6 +33,14 @@ describe "grimm record" do
 
     it "returns value of row type" do
       expect(List.get_table_query([], "type", true)).to eq ["true"]
+    end
+
+    it "returns the first item in the database" do
+      expect(List.first).to be_kind_of Array
+    end
+
+    it "returns the last item in the database" do
+      expect(List.last).to be_kind_of Array
     end
   end
 end
