@@ -27,6 +27,11 @@ module Grimm
       (DatabaseConnector.execute query).first
     end
 
+    def self.first
+      query = "SELECT * FROM #{@@table} ORDER BY id LIMIT 1"
+      (DatabaseConnector.execute query).first
+    end
+
     def save
       if id
         DatabaseConnector.execute "UPDATE #{@@table} SET
