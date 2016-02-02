@@ -14,7 +14,7 @@ module Grimm
       if request.path_info == "/favicon.ico"
         return [404, {}, []]
       end
-      page = get_rack_app(env)
+      page = get_rack_app(request)
       if page.nil?
         return [404, {}, ["#{request.request_method.downcase} #{request.path}
           was not defined in the route. Check /config/routes.rb for defined
@@ -28,7 +28,7 @@ module Grimm
       @router ||= Grimm::Router.new
     end
 
-    def get_rack_app(_env)
+    def get_rack_app(request)
       @router.check_url(request)
     end
   end

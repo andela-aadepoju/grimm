@@ -80,7 +80,7 @@ module Grimm
 
     def convert_target(request, route)
       controller_name = route[:controller].camelcase
-      controller = Object.const_missing("#{controller_name}Controller")
+      controller = Object.const_get("#{controller_name}Controller")
       controller.action(request, route[:target])
     end
 
