@@ -23,11 +23,11 @@
                 <% end %>
             </div>
             <div class="pull-right">
-              <a href="/lists/edit/<%= list.id %>" class="btn btn-info pull-left btn-sm" role="button">Mannage</a>
+              <a href="/lists/edit/<%= list.id %>" class="btn btn-info pull-left btn-sm" role="button">Manage</a>
               &nbsp;
               <form action="/lists/<%= list.id %>"  method="post" class="pull-right">
-                <input type="hidden" class="form-control" name="_method" value ="delete">
-                <button type= "submit" class="btn btn-smbtn-danger">Delete</button>
+                <input type="hidden" class="form-control" name="_method" value ="delete" />
+                <button class="btn btn-sm  btn-danger">Delete</button>
               </form>
             </div>
           </div>

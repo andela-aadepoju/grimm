@@ -4,66 +4,70 @@ require "sqlite3"
 
 module Grimm
   class GrimmRecord
-    @@properties = {}
-    @@table = nil
 
     def self.to_table(table_name)
-      @@table = table_name
+      @table = table_name
     end
 
     def self.property(column_name, args)
-      @@properties[column_name] = args
+      @properties ||= {}
+      @properties[column_name] = args
     end
 
     def self.create_table
       prop_array = []
-      @@properties.each do |key, value|
-        properties = []
+      @properties.each do |key, value|
+        properties ||= []
         properties << key.to_s
         value.each do |name, type|
-          get_table_query(properties, name, type)
+          properties << send("#{name.downcase}_query", type)
         end
         prop_array << properties.join(" ")
       end
-      query = "CREATE TABLE IF NOT EXISTS #{@@table} (#{prop_array.join(', ')})"
+      query = "CREATE TABLE IF NOT EXISTS #{@table} (#{prop_array.join(', ')})"
       DatabaseConnector.execute(query)
       make_methods
     end
 
     def self.make_methods
-      mtds = @@properties.keys.map(&:to_sym)
-      instance_exec(mtds) do
-        mtds.each { |mtd| attr_accessor mtd }
-      end
+      mtds = @properties.keys.map(&:to_sym)
+      mtds.each { |mtd| attr_accessor mtd }
     end
 
-    def self.get_table_query(properties, name, type)
-      name = name.to_s.downcase
-      if name == "primary_key" && type
-        properties << "PRIMARY KEY AUTOINCREMENT"
-      elsif name == "autoincrement" && type
-        properties << "AUTOINCREMENT"
-      elsif name == "nullable" && !type
-        properties << "NOT NULL"
-      elsif name == "type"
-        properties << type.to_s
-      end
+    def self.primary_key_query(value = false)
+      "PRIMARY KEY AUTOINCREMENT" if value
+    end
+
+    def self.autoincrement_query(value = false)
+      "AUTOINCREMENT" if value
+    end
+
+    def self.nullable_query(value = true)
+      "NOT NULL" unless value
+    end
+
+    def self.type_query(value)
+      value.to_s
+    end
+
+    def self.properties_keys
+      @properties.keys
     end
 
     def get_values
-      attributes = @@properties.keys
+      attributes = self.class.properties_keys
       attributes.delete(:id)
       attributes.map { |method| send(method) }
     end
 
     def update_records_placeholders
-      columns = @@properties.keys
+      columns = self.class.properties_keys
       columns.delete(:id)
       columns.map { |col| "#{col}=?" }.join(",")
     end
 
     def get_columns
-      columns = @@properties.keys
+      columns = self.class.properties_keys
       columns.delete(:id)
       columns.join(",")
     end
@@ -77,12 +81,13 @@ module Grimm
     end
 
     def new_record_placeholders
-      (["?"] * (@@properties.size - 1)).join(",")
+      properties = self.class.properties_keys
+      (["?"] * (properties.size - 1)).join(",")
     end
 
     def self.map_object(row)
       model_name = new
-      @@properties.each_key.with_index do |value, index|
+      @properties.each_key.with_index do |value, index|
         model_name.send("#{value}=", row[index])
       end
       model_name
