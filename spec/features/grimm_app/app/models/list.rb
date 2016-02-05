@@ -4,6 +4,6 @@ class List < Grimm::GrimmRecord
   property :title, type: :text, nullable: false
   property :body, type: :text, nullable: false
   property :created_at, type: :text, nullable: false
-  property :done, type: :boolean, nullable: false, default: false
+  property :done, type: :text, nullable: false
   create_table
 end

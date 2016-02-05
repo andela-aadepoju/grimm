@@ -7,7 +7,7 @@ describe "create todo lists", type: :feature do
     fill_in "title", with: "Test Todo"
     fill_in "body", with: "Test Todo Body"
     click_on "Create"
-    click_on "Mannage", match: :first
+    click_on "Manage", match: :first
     check "done"
     click_on "Update"
     expect(page).to have_content "Done"
