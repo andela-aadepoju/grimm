@@ -14,4 +14,7 @@ RSpec.configure do |config|
     @list.created_at = Time.now.to_s
     @list.save
   end
+  config.after(:each) do
+    List.delete_all
+  end
 end
