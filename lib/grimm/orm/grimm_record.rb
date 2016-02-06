@@ -24,7 +24,6 @@ module Grimm
         end
         prop_array << properties.join(" ")
       end
-      binding.pry
       query = "CREATE TABLE IF NOT EXISTS #{@table} (#{prop_array.join(', ')})"
       DatabaseConnector.execute(query)
       make_methods
