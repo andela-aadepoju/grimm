@@ -1,5 +1,6 @@
 module Grimm
   class GrimmRecord
+
     def self.find(id)
       row = DatabaseConnector.execute("SELECT #{properties_keys.join(',')}
       FROM #{@table} WHERE id = ?", id).first

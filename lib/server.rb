@@ -1,6 +1,7 @@
 require "thor"
 module Grimm
   class Server < Thor
+
     desc "server", "This starts the app server"
     def server
       start_server

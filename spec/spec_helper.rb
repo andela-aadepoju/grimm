@@ -7,8 +7,8 @@ require "./lib/grimm/orm/database_connector.rb"
 
 require "simplecov"
 SimpleCov.start
-# require "coveralls"
-# Coveralls.wear!
+require "coveralls"
+Coveralls.wear!
 
 class Post < Grimm::GrimmRecord
   to_table :posts
