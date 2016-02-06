@@ -151,7 +151,7 @@ In the case of a request being made to an undefined route an error message is re
 ## Running the app
 From terminal, run:
 
-    $ bundle exec rackup
+    $ grimm server
 
 This will lunch the app on port 4500
 ## Development
